@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BasketballData.Model\BasketballData.Model.csproj" />
     <ProjectReference Include="..\BasketballData.Processors\BasketballData.Processors.csproj" />
   </ItemGroup>

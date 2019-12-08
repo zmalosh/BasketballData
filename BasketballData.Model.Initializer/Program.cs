@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using BasketballData.Processors.ApiBasketball.Processors;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 
@@ -16,8 +17,13 @@ namespace BasketballData.Model.Initializer
 				context.Database.EnsureDeleted();
 				context.Database.EnsureCreated();
 				context.SaveChanges();
-				context.Countries.Add(new Country { ApiBasketballCountryId = 123, CountryAbbr = "XX", CountryName = "XXXXXX", FlagUrl = "http://www.asdf.com" });
+
+				var countriesProcessor = new CountriesProcessor();
+				Console.WriteLine("START COUNTRIES");
+				countriesProcessor.Run(context);
+				Console.WriteLine("SAVE COUNTRIES");
 				context.SaveChanges();
+				Console.WriteLine("END COUNTRIES");
 			}
 		}
 

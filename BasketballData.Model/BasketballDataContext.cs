@@ -22,6 +22,7 @@ namespace BasketballData.Model
 
 		public DbSet<Country> Countries { get; set; }
 		public DbSet<League> Leagues { get; set; }
+		public DbSet<LeagueSeason> LeagueSeasons { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -30,6 +31,9 @@ namespace BasketballData.Model
 
 			modelBuilder.Entity<League>().HasKey(x => x.LeagueId);
 			modelBuilder.Entity<League>().HasOne(x => x.Country).WithMany(y => y.Leagues).HasForeignKey(x => x.CountryId);
+
+			modelBuilder.Entity<LeagueSeason>().HasKey(x => x.LeagueSeasonId);
+			modelBuilder.Entity<LeagueSeason>().HasOne(x => x.League).WithMany(y => y.LeagueSeasons).HasForeignKey(x => x.LeagueId);
 		}
 	}
 }

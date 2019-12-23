@@ -23,19 +23,42 @@ namespace BasketballData.Processors.ApiBasketball.Processors
 
 			foreach (var apiLeague in orderedLeagues)
 			{
-				if (!existingLeagues.TryGetValue(apiLeague.Id, out League dbLeague))
+				if (apiLeague.Country.Id != 0)
 				{
-					dbLeague = new League
+					if (!existingLeagues.TryGetValue(apiLeague.Id, out League dbLeague))
 					{
-						ApiBasketballLeagueId = apiLeague.Id,
-						LeagueName = apiLeague.Name,
-						LeagueLogo = apiLeague.Logo,
-						CountryId = 1, //countriesDict[apiLeague.Country.Id],
-						LeagueType = apiLeague.Type
-					};
+						dbLeague = new League
+						{
+							ApiBasketballLeagueId = apiLeague.Id,
+							LeagueName = apiLeague.Name,
+							LeagueLogo = apiLeague.Logo,
+							CountryId = countriesDict[apiLeague.Country.Id],
+							LeagueType = apiLeague.Type,
+							LeagueSeasons = new List<LeagueSeason>()
+						};
 
-					existingLeagues.Add(dbLeague.ApiBasketballLeagueId, dbLeague);
-					dbContext.Leagues.Add(dbLeague);
+						existingLeagues.Add(dbLeague.ApiBasketballLeagueId, dbLeague);
+						dbContext.Leagues.Add(dbLeague);
+					}
+
+					var dbLeagueSeasons = dbContext.LeagueSeasons.Where(x => x.League.ApiBasketballLeagueId == apiLeague.Id).ToDictionary(x => x.ApiBasketballSeasonKey);
+					var leagueSeasons = dbLeague.LeagueSeasons ?? new List<LeagueSeason>();
+					var apiLeagueSeasons = apiLeague.Seasons.OrderBy(x => x.Start).ToList();
+
+					foreach (var apiSeason in apiLeagueSeasons)
+					{
+						if (!dbLeagueSeasons.ContainsKey(apiSeason.Season))
+						{
+							var dbLeagueSeason = new LeagueSeason
+							{
+								ApiBasketballSeasonKey = apiSeason.Season,
+								SeasonStartUtc = apiSeason.Start.UtcDateTime,
+								SeasonEndUtc = apiSeason.End.UtcDateTime,
+								ApiBasketballLeagueId = apiLeague.Id
+							};
+							dbLeague.LeagueSeasons.Add(dbLeagueSeason);
+						}
+					}
 				}
 			}
 		}

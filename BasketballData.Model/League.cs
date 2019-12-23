@@ -14,5 +14,6 @@ namespace BasketballData.Model
 		public int ApiBasketballLeagueId { get; set; }
 
 		public virtual Country Country { get; set; }
+		public virtual List<LeagueSeason> LeagueSeasons { get; set; }
 	}
 }

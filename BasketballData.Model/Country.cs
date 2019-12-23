@@ -11,5 +11,7 @@ namespace BasketballData.Model
 		public string CountryAbbr { get; set; }
 		public string FlagUrl { get; set; }
 		public int ApiBasketballCountryId { get; set; }
+
+		public virtual List<League> Leagues { get; set; }
 	}
 }

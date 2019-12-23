@@ -24,6 +24,13 @@ namespace BasketballData.Model.Initializer
 				Console.WriteLine("SAVE COUNTRIES");
 				context.SaveChanges();
 				Console.WriteLine("END COUNTRIES");
+
+				var leaguesProcessor = new LeaguesProcessor();
+				Console.WriteLine("START LEAGUES");
+				leaguesProcessor.Run(context);
+				Console.WriteLine("SAVE LEAGUES");
+				context.SaveChanges();
+				Console.WriteLine("END LEAGUES");
 			}
 		}
 

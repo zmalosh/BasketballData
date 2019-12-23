@@ -9,7 +9,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 	{
 		public static string GetFeedUrl()
 		{
-			return "https://api-basketball.p.rapidapi.com/countries";
+			return "https://api-basketball.p.rapidapi.com/leagues";
 		}
 
 		public static LeaguesFeed FromJson(string json) => JsonConvert.DeserializeObject<LeaguesFeed>(json, Converter.Settings);
@@ -24,7 +24,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 		public List<object> Errors { get; set; }
 
 		[JsonProperty("results")]
-		public long Results { get; set; }
+		public int Count { get; set; }
 
 		[JsonProperty("response")]
 		public List<League> Leagues { get; set; }
@@ -41,7 +41,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 			public string Type { get; set; }
 
 			[JsonProperty("logo")]
-			public object Logo { get; set; }
+			public string Logo { get; set; }
 
 			[JsonProperty("country")]
 			public ApiCountry Country { get; set; }

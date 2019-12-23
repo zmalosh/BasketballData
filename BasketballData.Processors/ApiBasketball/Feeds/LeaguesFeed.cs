@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using ApiCountry = BasketballData.Processors.ApiBasketball.Feeds.CountriesFeed.Country;
 
 namespace BasketballData.Processors.ApiBasketball.Feeds
 {
@@ -43,28 +44,13 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 			public object Logo { get; set; }
 
 			[JsonProperty("country")]
-			public Country Country { get; set; }
+			public ApiCountry Country { get; set; }
 
 			[JsonProperty("seasons")]
 			public List<LeagueSeason> Seasons { get; set; }
 		}
 
-		public partial class Country
-		{
-			[JsonProperty("id")]
-			public int Id { get; set; }
-
-			[JsonProperty("name")]
-			public string Name { get; set; }
-
-			[JsonProperty("code")]
-			public string Code { get; set; }
-
-			[JsonProperty("flag")]
-			public Uri Flag { get; set; }
-		}
-
-		public partial class LeagueSeason
+		public class LeagueSeason
 		{
 			[JsonProperty("season")]
 			public string Season { get; set; }

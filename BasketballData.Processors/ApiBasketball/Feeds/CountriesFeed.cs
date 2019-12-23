@@ -28,7 +28,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 		[JsonProperty("response")]
 		public List<Country> Countries { get; set; }
 
-		public partial class Country
+		public class Country
 		{
 			[JsonProperty("id")]
 			public int Id { get; set; }

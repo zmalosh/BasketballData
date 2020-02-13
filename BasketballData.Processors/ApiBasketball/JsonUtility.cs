@@ -14,13 +14,14 @@ namespace BasketballData.Processors.ApiBasketball
 	{
 		private static readonly string ApiKey = File.ReadAllText("ApiBasketball.key");
 		private static readonly WebClient WebClient = CreateWebClient();
-		private static readonly ICacheUtility CacheUtility = new AzureUtility();
+		// private static readonly ICacheUtility CacheUtility = new AzureUtility();
+		private static readonly ICacheUtility CacheUtility = new NoCacheUtility();
 
 		public static string GetRawJsonFromUrl(string url, int? cacheTimeSeconds = null)
 		{
 			string cachePath = GetCachePathFromUrl(url);
 
-			if (!CacheUtility.ReadFile(cachePath, out string rawJson, cacheTimeSeconds))
+			if (!cacheTimeSeconds.HasValue || !CacheUtility.ReadFile(cachePath, out string rawJson, cacheTimeSeconds))
 			{
 				rawJson = WebClient.DownloadString(url);
 				if (!cacheTimeSeconds.HasValue || (cacheTimeSeconds.HasValue && cacheTimeSeconds.Value > 0))

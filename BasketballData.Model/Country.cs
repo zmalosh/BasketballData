@@ -14,5 +14,6 @@ namespace BasketballData.Model
 
 		public virtual List<League> Leagues { get; set; }
 		public virtual List<Team> Teams { get; set; }
+		public virtual List<Game> Games { get; set; }
 	}
 }

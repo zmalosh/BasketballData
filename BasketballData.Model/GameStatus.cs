@@ -18,8 +18,8 @@ namespace BasketballData.Model
 		Final = 301,
 		FinalWithOT = 302,
 		Postponed = 401,
-		Cancelled = 501
-
+		Cancelled = 501,
+		Unknown = 999
 	}
 
 	public enum GameStatus
@@ -28,7 +28,8 @@ namespace BasketballData.Model
 		Live = 2,
 		Final = 3,
 		Postponed = 4,
-		Cancelled = 5
+		Cancelled = 5,
+		Unknown = 9
 	}
 
 	public class RefGameStatus

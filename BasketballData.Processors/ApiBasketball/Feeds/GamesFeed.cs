@@ -27,7 +27,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 		public int Count { get; set; }
 
 		[JsonProperty("response")]
-		public List<ApiGame> Response { get; set; }
+		public List<ApiGame> Games { get; set; }
 
 		public class GameParameters
 		{

@@ -14,5 +14,6 @@ namespace BasketballData.Model
 		public string ApiBasketballSeasonKey { get; set; }
 
 		public virtual League League { get; set; }
+		public virtual IList<Game> Games { get; set; }
 	}
 }

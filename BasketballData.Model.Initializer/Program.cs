@@ -43,6 +43,7 @@ namespace BasketballData.Model.Initializer
 					new RefGameStatus{ FullGameStatusId = FullGameStatus.FinalWithOT, FullGameStatusName = "Final (OT)", GameStatusId = GameStatus.Final, GameStatusName = "Final", ApiBasketballStatusCode = "AOT" },
 					new RefGameStatus{ FullGameStatusId = FullGameStatus.Postponed, FullGameStatusName = "Postponed", GameStatusId = GameStatus.Postponed, GameStatusName = "Postponed", ApiBasketballStatusCode = "POST" },
 					new RefGameStatus{ FullGameStatusId = FullGameStatus.Cancelled, FullGameStatusName = "Cancelled", GameStatusId = GameStatus.Cancelled, GameStatusName = "Cancelled", ApiBasketballStatusCode = "CANC" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Unknown, FullGameStatusName = "Unknown", GameStatusId = GameStatus.Unknown, GameStatusName = "Unknown", ApiBasketballStatusCode = null }
 				});
 				context.SaveChanges();
 
@@ -64,6 +65,7 @@ namespace BasketballData.Model.Initializer
 											.OrderBy(x => x.LeagueSeasonId)
 											.Select(y => new { y.ApiBasketballLeagueId, y.ApiBasketballSeasonKey })
 											.ToList();
+				//leagueSeasons = leagueSeasons.Where(x => x.ApiBasketballLeagueId == 12).ToList();
 				foreach (var leagueSeason in leagueSeasons)
 				{
 					int leagueId = leagueSeason.ApiBasketballLeagueId;
@@ -74,6 +76,23 @@ namespace BasketballData.Model.Initializer
 					Console.WriteLine($"SAVE TEAMS - {leagueId} {seasonKey}");
 					context.SaveChanges();
 					Console.WriteLine($"END TEAMS - {leagueId} {seasonKey}");
+				}
+
+				var countriesDict = context.Countries.ToDictionary(x => x.ApiBasketballCountryId, y => y.CountryId);
+				var teamsDict = context.Teams.ToDictionary(x => x.ApiBasketballTeamId, y => y.TeamId);
+				var statusDict = context.RefGameStatuses
+										.Where(x=>!string.IsNullOrEmpty(x.ApiBasketballStatusCode))
+										.ToDictionary(x => x.ApiBasketballStatusCode, y => y.FullGameStatusId);
+				foreach (var leagueSeason in leagueSeasons)
+				{
+					int leagueId = leagueSeason.ApiBasketballLeagueId;
+					string seasonKey = leagueSeason.ApiBasketballSeasonKey;
+					var gamesProcessor = new GamesProcessor(leagueId, seasonKey, countriesDict, teamsDict, statusDict);
+					Console.WriteLine($"START GAMES - {leagueId} {seasonKey}");
+					gamesProcessor.Run(context);
+					Console.WriteLine($"SAVE GAMES - {leagueId} {seasonKey}");
+					context.SaveChanges();
+					Console.WriteLine($"END GAMES - {leagueId} {seasonKey}");
 				}
 			}
 		}

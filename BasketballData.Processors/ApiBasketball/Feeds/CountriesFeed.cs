@@ -26,22 +26,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 		public int ResultCount { get; set; }
 
 		[JsonProperty("response")]
-		public List<Country> Countries { get; set; }
-
-		public class Country
-		{
-			[JsonProperty("id")]
-			public int Id { get; set; }
-
-			[JsonProperty("name")]
-			public string Name { get; set; }
-
-			[JsonProperty("code")]
-			public string Code { get; set; }
-
-			[JsonProperty("flag")]
-			public string Flag { get; set; }
-		}
+		public List<ApiCountry> Countries { get; set; }
 	}
 
 	public static partial class Serialize

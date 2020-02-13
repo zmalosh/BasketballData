@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using ApiCountry = BasketballData.Processors.ApiBasketball.Feeds.CountriesFeed.Country;
 
 namespace BasketballData.Processors.ApiBasketball.Feeds
 {

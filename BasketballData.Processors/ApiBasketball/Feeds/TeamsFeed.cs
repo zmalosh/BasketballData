@@ -18,7 +18,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 		public string Get { get; set; }
 
 		[JsonProperty("parameters")]
-		public List<object> Parameters { get; set; }
+		public TeamParameters Parameters { get; set; }
 
 		[JsonProperty("errors")]
 		public List<object> Errors { get; set; }
@@ -29,6 +29,24 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 		[JsonProperty("response")]
 		public List<ApiFullTeam> Teams { get; set; }
 
+		public class TeamParameters
+		{
+			[JsonProperty("league")]
+			public int? League { get; set; }
+
+			[JsonProperty("season")]
+			public string Season { get; set; }
+
+			[JsonProperty("id")]
+			public int? Id { get; set; }
+
+			[JsonProperty("name")]
+			public string Name { get; set; }
+
+			[JsonProperty("search")]
+			public string Search { get; set; }
+		}
+
 		public class ApiFullTeam
 		{
 			[JsonProperty("id")]
@@ -38,7 +56,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 			public string Name { get; set; }
 
 			[JsonProperty("nationnal")]
-			public bool Nationnal { get; set; }
+			public bool IsNational { get; set; }
 
 			[JsonProperty("logo")]
 			public string Logo { get; set; }

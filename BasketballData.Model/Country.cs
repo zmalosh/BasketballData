@@ -13,5 +13,6 @@ namespace BasketballData.Model
 		public int ApiBasketballCountryId { get; set; }
 
 		public virtual List<League> Leagues { get; set; }
+		public virtual List<Team> Teams { get; set; }
 	}
 }

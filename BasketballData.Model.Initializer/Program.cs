@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace BasketballData.Model.Initializer
 {
@@ -18,6 +19,16 @@ namespace BasketballData.Model.Initializer
 				context.Database.EnsureCreated();
 				context.SaveChanges();
 
+				context.Countries.Add(
+					new Country
+					{
+						ApiBasketballCountryId = 0,
+						CountryAbbr = "XX",
+						CountryName = "World",
+						FlagUrl = null
+					});
+				context.SaveChanges();
+
 				var countriesProcessor = new CountriesProcessor();
 				Console.WriteLine("START COUNTRIES");
 				countriesProcessor.Run(context);
@@ -31,6 +42,22 @@ namespace BasketballData.Model.Initializer
 				Console.WriteLine("SAVE LEAGUES");
 				context.SaveChanges();
 				Console.WriteLine("END LEAGUES");
+
+				var leagueSeasons = context.LeagueSeasons
+											.OrderBy(x => x.LeagueSeasonId)
+											.Select(y => new { y.ApiBasketballLeagueId, y.ApiBasketballSeasonKey })
+											.ToList();
+				foreach (var leagueSeason in leagueSeasons)
+				{
+					int leagueId = leagueSeason.ApiBasketballLeagueId;
+					string seasonKey = leagueSeason.ApiBasketballSeasonKey;
+					var teamsProcessor = new TeamsProcessor(leagueId, seasonKey);
+					Console.WriteLine($"START TEAMS - {leagueId} {seasonKey}");
+					teamsProcessor.Run(context);
+					Console.WriteLine($"SAVE TEAMS - {leagueId} {seasonKey}");
+					context.SaveChanges();
+					Console.WriteLine($"END TEAMS - {leagueId} {seasonKey}");
+				}
 			}
 		}
 

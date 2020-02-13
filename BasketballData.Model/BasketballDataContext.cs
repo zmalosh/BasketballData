@@ -20,6 +20,7 @@ namespace BasketballData.Model
 			optionsBuilder.UseSqlServer(connectionString);
 		}
 
+		public DbSet<RefGameStatus> RefGameStatuses { get; set; }
 		public DbSet<Country> Countries { get; set; }
 		public DbSet<League> Leagues { get; set; }
 		public DbSet<LeagueSeason> LeagueSeasons { get; set; }
@@ -27,6 +28,8 @@ namespace BasketballData.Model
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			modelBuilder.Entity<RefGameStatus>().HasKey(x => x.FullGameStatusId);
+
 			modelBuilder.Entity<Country>().HasKey(c => c.CountryId);
 			modelBuilder.Entity<Country>().Property(c => c.CountryAbbr).HasMaxLength(2);
 			modelBuilder.Entity<Country>().Property(x => x.FlagUrl).HasMaxLength(255);
@@ -42,6 +45,6 @@ namespace BasketballData.Model
 			modelBuilder.Entity<Team>().HasOne(x => x.Country).WithMany(y => y.Teams).HasForeignKey(x => x.CountryId);
 			modelBuilder.Entity<Team>().Property(x => x.TeamName).HasMaxLength(64);
 			modelBuilder.Entity<Team>().Property(x => x.TeamLogoUrl).HasMaxLength(255);
-		}		
+		}
 	}
 }

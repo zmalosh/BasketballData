@@ -1,6 +1,7 @@
 ﻿using BasketballData.Processors.ApiBasketball.Processors;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -27,6 +28,22 @@ namespace BasketballData.Model.Initializer
 						CountryName = "World",
 						FlagUrl = null
 					});
+
+				context.RefGameStatuses.AddRange(new List<RefGameStatus>
+				{
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.NotStarted, FullGameStatusName = "Not Started", GameStatusId = GameStatus.Pregame, GameStatusName = "Pregame", ApiBasketballStatusCode = "NS" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Live_Q1, FullGameStatusName = "Live - Q1", GameStatusId = GameStatus.Live, GameStatusName = "Live", ApiBasketballStatusCode = "Q1" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Live_Q2, FullGameStatusName = "Live - Q2", GameStatusId = GameStatus.Live, GameStatusName = "Live", ApiBasketballStatusCode = "Q2" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Live_Q3, FullGameStatusName = "Live - Q3", GameStatusId = GameStatus.Live, GameStatusName = "Live", ApiBasketballStatusCode = "Q3" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Live_Q4, FullGameStatusName = "Live - Q4", GameStatusId = GameStatus.Live, GameStatusName = "Live", ApiBasketballStatusCode = "Q4" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Live_OT, FullGameStatusName = "Live - OT", GameStatusId = GameStatus.Live, GameStatusName = "Live", ApiBasketballStatusCode = "OT" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Live_BK, FullGameStatusName = "Live - Break", GameStatusId = GameStatus.Live, GameStatusName = "Live", ApiBasketballStatusCode = "BT" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Live_HT, FullGameStatusName = "Live - Halftime", GameStatusId = GameStatus.Live, GameStatusName = "Live", ApiBasketballStatusCode = "HT" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Final, FullGameStatusName = "Final", GameStatusId = GameStatus.Final, GameStatusName = "Final", ApiBasketballStatusCode = "FT" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.FinalWithOT, FullGameStatusName = "Final (OT)", GameStatusId = GameStatus.Final, GameStatusName = "Final", ApiBasketballStatusCode = "AOT" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Postponed, FullGameStatusName = "Postponed", GameStatusId = GameStatus.Postponed, GameStatusName = "Postponed", ApiBasketballStatusCode = "POST" },
+					new RefGameStatus{ FullGameStatusId = FullGameStatus.Cancelled, FullGameStatusName = "Cancelled", GameStatusId = GameStatus.Cancelled, GameStatusName = "Cancelled", ApiBasketballStatusCode = "CANC" },
+				});
 				context.SaveChanges();
 
 				var countriesProcessor = new CountriesProcessor();

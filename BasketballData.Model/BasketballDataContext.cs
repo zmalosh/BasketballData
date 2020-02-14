@@ -28,6 +28,7 @@ namespace BasketballData.Model
 		public DbSet<LeagueSeason> LeagueSeasons { get; set; }
 		public DbSet<Team> Teams { get; set; }
 		public DbSet<Game> Games { get; set; }
+		public DbSet<BetLine> BetLines { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -63,6 +64,9 @@ namespace BasketballData.Model
 			modelBuilder.Entity<Game>().HasOne(x => x.LeagueSeason).WithMany(y => y.Games).HasForeignKey(x => x.LeagueSeasonId).OnDelete(DeleteBehavior.Restrict);
 			modelBuilder.Entity<Game>().HasOne(x => x.HomeTeam).WithMany(y => y.HomeGames).HasForeignKey(x => x.HomeTeamId).OnDelete(DeleteBehavior.Restrict);
 			modelBuilder.Entity<Game>().HasOne(x => x.AwayTeam).WithMany(y => y.AwayGames).HasForeignKey(x => x.AwayTeamId).OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<BetLine>().HasKey(x => new { x.GameId, x.BetTypeId, x.BookmakerId });
+			modelBuilder.Entity<BetLine>().Property(x => x.BetName).HasMaxLength(128);
 		}
 	}
 }

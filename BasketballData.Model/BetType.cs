@@ -9,5 +9,7 @@ namespace BasketballData.Model
 		public int BetTypeId { get; set; }
 		public string BetTypeName { get; set; }
 		public int ApiBasketballBetTypeId { get; set; }
+
+		public virtual IList<BetLine> BetLines { get; set; }
 	}
 }

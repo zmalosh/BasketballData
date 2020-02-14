@@ -32,5 +32,6 @@ namespace BasketballData.Model
 		public virtual Country Country { get; set; }
 		public virtual Team HomeTeam { get; set; }
 		public virtual Team AwayTeam { get; set; }
+		public virtual IList<BetLine> BetLines { get; set; }
 	}
 }

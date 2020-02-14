@@ -54,6 +54,13 @@ namespace BasketballData.Model.Initializer
 				context.SaveChanges();
 				Console.WriteLine("END BOOKMAKERS");
 
+				var betTypesProcessor = new BetTypesProcessor();
+				Console.WriteLine("START BET TYPES");
+				betTypesProcessor.Run(context);
+				Console.WriteLine("SAVE BET TYPES");
+				context.SaveChanges();
+				Console.WriteLine("END BET TYPES");
+
 				var countriesProcessor = new CountriesProcessor();
 				Console.WriteLine("START COUNTRIES");
 				countriesProcessor.Run(context);

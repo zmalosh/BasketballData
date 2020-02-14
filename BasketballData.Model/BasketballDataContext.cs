@@ -22,6 +22,7 @@ namespace BasketballData.Model
 
 		public DbSet<RefGameStatus> RefGameStatuses { get; set; }
 		public DbSet<Bookmaker> Bookmakers { get; set; }
+		public DbSet<BetType> BetTypes { get; set; }
 		public DbSet<Country> Countries { get; set; }
 		public DbSet<League> Leagues { get; set; }
 		public DbSet<LeagueSeason> LeagueSeasons { get; set; }
@@ -37,6 +38,9 @@ namespace BasketballData.Model
 
 			modelBuilder.Entity<Bookmaker>().HasKey(x => x.BookmakerId);
 			modelBuilder.Entity<Bookmaker>().Property(x => x.BookmakerName).HasMaxLength(32);
+
+			modelBuilder.Entity<BetType>().HasKey(x => x.BetTypeId);
+			modelBuilder.Entity<BetType>().Property(x => x.BetTypeName).HasMaxLength(128);
 
 			modelBuilder.Entity<Country>().HasKey(c => c.CountryId);
 			modelBuilder.Entity<Country>().Property(c => c.CountryAbbr).HasMaxLength(2);

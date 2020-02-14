@@ -28,6 +28,7 @@ namespace BasketballData.Processors.ApiBasketball.Processors
 					};
 					existingBookmakers.Add(dbBookmaker.ApiBasketballBookmakerId, dbBookmaker);
 					dbContext.Bookmakers.Add(dbBookmaker);
+					dbContext.SaveChanges();
 				}
 			}
 		}

@@ -79,7 +79,13 @@ namespace BasketballData.Model.Initializer
 											.OrderBy(x => x.LeagueSeasonId)
 											.Select(y => new { y.ApiBasketballLeagueId, y.ApiBasketballSeasonKey })
 											.ToList();
-				leagueSeasons = leagueSeasons.Where(x => x.ApiBasketballLeagueId == 12 || x.ApiBasketballLeagueId == 38).ToList(); // NBA & Finland W Only
+
+				//var desiredLeagueIds = new List<int> { 102, 74 };
+				//leagueSeasons = leagueSeasons
+				//.Where(x => desiredLeagueIds.Contains(x.ApiBasketballLeagueId))
+				//.Where(x => x.SeasonEndUtc >= DateTime.UtcNow.Date)
+				//.ToList();
+
 				foreach (var leagueSeason in leagueSeasons)
 				{
 					int leagueId = leagueSeason.ApiBasketballLeagueId;
@@ -107,6 +113,31 @@ namespace BasketballData.Model.Initializer
 					Console.WriteLine($"SAVE GAMES - {leagueId} {seasonKey}");
 					context.SaveChanges();
 					Console.WriteLine($"END GAMES - {leagueId} {seasonKey}");
+				}
+
+				var bookmakersDict = context.Bookmakers.ToDictionary(x => x.ApiBasketballBookmakerId, y => y.BookmakerId);
+				var betTypesDict = context.BetTypes.ToDictionary(x => x.ApiBasketballBetTypeId, y => y.BetTypeId);
+
+				var liveAndUpcomingGameStatuses = context.RefGameStatuses
+															.Where(x => x.GameStatusId == GameStatus.Pregame || x.GameStatusId == GameStatus.Live)
+															.Select(x => x.FullGameStatusId)
+															.ToList();
+				var activeLeagueSeasons = context.Games
+													.Where(x => liveAndUpcomingGameStatuses.Contains(x.FullGameStatusId)
+																&& x.GameTimeUtc <= DateTime.UtcNow.Date.AddDays(4))
+													.Select(y => new { y.LeagueSeason.ApiBasketballLeagueId, y.LeagueSeason.ApiBasketballSeasonKey })
+													.Distinct()
+													.ToList();
+				foreach (var leagueSeason in leagueSeasons)
+				{
+					int leagueId = leagueSeason.ApiBasketballLeagueId;
+					string seasonKey = leagueSeason.ApiBasketballSeasonKey;
+					var oddsProcessor = new OddsProcessor(leagueId, seasonKey, betTypesDict, bookmakersDict);
+					Console.WriteLine($"START ODDS - {leagueId} {seasonKey}");
+					oddsProcessor.Run(context);
+					Console.WriteLine($"SAVE ODDS - {leagueId} {seasonKey}");
+					context.SaveChanges();
+					Console.WriteLine($"END ODDS - {leagueId} {seasonKey}");
 				}
 			}
 		}

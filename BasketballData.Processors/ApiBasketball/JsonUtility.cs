@@ -23,7 +23,14 @@ namespace BasketballData.Processors.ApiBasketball
 
 			if (!cacheTimeSeconds.HasValue || !CacheUtility.ReadFile(cachePath, out string rawJson, cacheTimeSeconds))
 			{
-				rawJson = WebClient.DownloadString(url);
+				try
+				{
+					rawJson = WebClient.DownloadString(url);
+				}
+				catch
+				{
+					return null;
+				}
 				if (!cacheTimeSeconds.HasValue || (cacheTimeSeconds.HasValue && cacheTimeSeconds.Value > 0))
 				{
 					CacheUtility.WriteFile(cachePath, rawJson);

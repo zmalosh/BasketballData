@@ -6,10 +6,12 @@ namespace BasketballData.Model
 {
 	public class BetLine
 	{
+		public int BetLineId { get; set; }
 		public int GameId { get; set; }
 		public int BetTypeId { get; set; }
 		public int BookmakerId { get; set; }
 		public string BetName { get; set; }
+		public decimal? BetValue { get; set; }
 		public decimal? Line { get; set; }
 
 		public virtual Game Game { get; set; }

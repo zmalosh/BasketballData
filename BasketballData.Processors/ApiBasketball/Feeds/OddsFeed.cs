@@ -89,7 +89,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 		public class BetLine
 		{
 			[JsonProperty("value")]
-			public string BetValue { get; set; }
+			public string BetName { get; set; }
 
 			[JsonProperty("odd")]
 			public decimal Line_Decimal { get; set; }

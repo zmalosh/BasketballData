@@ -65,7 +65,7 @@ namespace BasketballData.Model
 			modelBuilder.Entity<Game>().HasOne(x => x.HomeTeam).WithMany(y => y.HomeGames).HasForeignKey(x => x.HomeTeamId).OnDelete(DeleteBehavior.Restrict);
 			modelBuilder.Entity<Game>().HasOne(x => x.AwayTeam).WithMany(y => y.AwayGames).HasForeignKey(x => x.AwayTeamId).OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<BetLine>().HasKey(x => new { x.GameId, x.BetTypeId, x.BookmakerId });
+			modelBuilder.Entity<BetLine>().HasKey(x => x.BetLineId);
 			modelBuilder.Entity<BetLine>().Property(x => x.BetName).HasMaxLength(128);
 		}
 	}

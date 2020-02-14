@@ -65,7 +65,7 @@ namespace BasketballData.Model.Initializer
 											.OrderBy(x => x.LeagueSeasonId)
 											.Select(y => new { y.ApiBasketballLeagueId, y.ApiBasketballSeasonKey })
 											.ToList();
-				//leagueSeasons = leagueSeasons.Where(x => x.ApiBasketballLeagueId == 12).ToList();
+				leagueSeasons = leagueSeasons.Where(x => x.ApiBasketballLeagueId == 12 || x.ApiBasketballLeagueId == 38).ToList(); // NBA & Finland W Only
 				foreach (var leagueSeason in leagueSeasons)
 				{
 					int leagueId = leagueSeason.ApiBasketballLeagueId;

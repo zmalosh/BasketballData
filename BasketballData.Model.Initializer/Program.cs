@@ -47,6 +47,13 @@ namespace BasketballData.Model.Initializer
 				});
 				context.SaveChanges();
 
+				var bookmakersProcessor = new BookmakersProcessor();
+				Console.WriteLine("START BOOKMAKERS");
+				bookmakersProcessor.Run(context);
+				Console.WriteLine("SAVE BOOKMAKERS");
+				context.SaveChanges();
+				Console.WriteLine("END BOOKMAKERS");
+
 				var countriesProcessor = new CountriesProcessor();
 				Console.WriteLine("START COUNTRIES");
 				countriesProcessor.Run(context);
@@ -81,7 +88,7 @@ namespace BasketballData.Model.Initializer
 				var countriesDict = context.Countries.ToDictionary(x => x.ApiBasketballCountryId, y => y.CountryId);
 				var teamsDict = context.Teams.ToDictionary(x => x.ApiBasketballTeamId, y => y.TeamId);
 				var statusDict = context.RefGameStatuses
-										.Where(x=>!string.IsNullOrEmpty(x.ApiBasketballStatusCode))
+										.Where(x => !string.IsNullOrEmpty(x.ApiBasketballStatusCode))
 										.ToDictionary(x => x.ApiBasketballStatusCode, y => y.FullGameStatusId);
 				foreach (var leagueSeason in leagueSeasons)
 				{

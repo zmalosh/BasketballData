@@ -7,6 +7,7 @@ namespace BasketballData.Model
 	public class League
 	{
 		public int LeagueId { get; set; }
+		public int? ParentLeagueId { get; set; }
 		public string LeagueName { get; set; }
 		public string LeagueLogo { get; set; }
 		public string LeagueType { get; set; }

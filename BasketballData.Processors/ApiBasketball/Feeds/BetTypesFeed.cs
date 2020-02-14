@@ -5,14 +5,14 @@ using System.Text;
 
 namespace BasketballData.Processors.ApiBasketball.Feeds
 {
-	public class BetsFeed
+	public class BetTypesFeed
 	{
 		public static string GetFeedUrl()
 		{
 			return "https://api-basketball.p.rapidapi.com/bets";
 		}
 
-		public static BetsFeed FromJson(string json) => JsonConvert.DeserializeObject<BetsFeed>(json, Converter.Settings);
+		public static BetTypesFeed FromJson(string json) => JsonConvert.DeserializeObject<BetTypesFeed>(json, Converter.Settings);
 
 		[JsonProperty("get")]
 		public string Get { get; set; }
@@ -41,7 +41,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 
 	public static partial class Serialize
 	{
-		public static string ToJson(this BetsFeed self) => JsonConvert.SerializeObject(self, BasketballData.Processors.ApiBasketball.Feeds.Converter.Settings);
+		public static string ToJson(this BetTypesFeed self) => JsonConvert.SerializeObject(self, BasketballData.Processors.ApiBasketball.Feeds.Converter.Settings);
 	}
 }
 

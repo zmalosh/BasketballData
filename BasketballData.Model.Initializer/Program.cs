@@ -13,7 +13,7 @@ namespace BasketballData.Model.Initializer
 		{
 			var config = GetConfig();
 
-			using (var context = new BasketballDataContext())
+			using (var context = new BasketballDataContext(config))
 			{
 				context.Database.EnsureDeleted();
 				context.Database.EnsureCreated();

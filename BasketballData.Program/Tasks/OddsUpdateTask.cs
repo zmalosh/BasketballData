@@ -13,7 +13,7 @@ namespace BasketballData.Program.Tasks
 		{
 			var config = GetConfig();
 
-			var context = new BasketballDataContext();
+			var context = new BasketballDataContext(config);
 
 			// UPDATE ODDS FOR GAMES STARTING IN NEXT 24 HOURS
 			var targetedApiBasketballLeagueSeasonInfos = context.Games.Where(x => x.LeagueSeason.IsActive)
@@ -36,7 +36,7 @@ namespace BasketballData.Program.Tasks
 					if (i % 10 == 9)
 					{
 						context.Dispose();
-						context = new BasketballDataContext();
+						context = new BasketballDataContext(config);
 					}
 				}
 			}

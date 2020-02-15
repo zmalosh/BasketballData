@@ -24,7 +24,7 @@ namespace BasketballData.Program.Tasks
 		{
 			var config = GetConfig();
 
-			using (var context = new BasketballDataContext())
+			using (var context = new BasketballDataContext(config))
 			{
 				// ASSUME ALL GAMES ARE IN DB FROM DAILY TASK
 

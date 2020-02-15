@@ -13,7 +13,7 @@ namespace BasketballData.Program.Tasks
 		{
 			var config = GetConfig();
 
-			var context = new BasketballDataContext();
+			var context = new BasketballDataContext(config);
 
 			var activeLeagueSeasons = context.LeagueSeasons.Where(x => x.IsActive).ToList();
 
@@ -35,7 +35,7 @@ namespace BasketballData.Program.Tasks
 					if (i % 10 == 9)
 					{
 						context.Dispose();
-						context = new BasketballDataContext();
+						context = new BasketballDataContext(config);
 					}
 				}
 			}

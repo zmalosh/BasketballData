@@ -8,19 +8,23 @@ namespace BasketballData.Model
 {
 	public class BasketballDataContext : DbContext
 	{
-		public BasketballDataContext() : base()
+		private readonly IConfiguration config;
+
+		public BasketballDataContext(IConfiguration config) : base()
 		{
 			this.ChangeTracker.Tracked += OnEntityTracked;
 			this.ChangeTracker.StateChanged += OnEntityStateChanged;
+
+			this.config = config;
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			IConfigurationRoot configuration = new ConfigurationBuilder()
-				.SetBasePath(Directory.GetCurrentDirectory())
-				.AddJsonFile("appsettings.json")
-				.Build();
-			var connectionString = configuration["BasketballDataContextConnectionString"];
+			//IConfigurationRoot configuration = new ConfigurationBuilder()
+			//	.SetBasePath(Directory.GetCurrentDirectory())
+			//	.AddJsonFile("appsettings.json")
+			//	.Build();
+			var connectionString = this.config["BasketballDataContextConnectionString"];
 			optionsBuilder.UseSqlServer(connectionString);
 		}
 

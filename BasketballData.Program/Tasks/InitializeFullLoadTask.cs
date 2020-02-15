@@ -15,10 +15,6 @@ namespace BasketballData.Program.Tasks
 
 			using (var context = new BasketballDataContext())
 			{
-				context.Database.EnsureDeleted();
-				context.Database.EnsureCreated();
-				context.SaveChanges();
-
 				context.Countries.Add(
 					new Country
 					{

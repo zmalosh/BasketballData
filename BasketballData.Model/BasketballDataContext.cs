@@ -12,10 +12,10 @@ namespace BasketballData.Model
 
 		public BasketballDataContext(IConfiguration config) : base()
 		{
+			this.config = config;
 			this.ChangeTracker.Tracked += OnEntityTracked;
 			this.ChangeTracker.StateChanged += OnEntityStateChanged;
 
-			this.config = config;
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

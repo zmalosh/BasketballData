@@ -12,7 +12,19 @@ namespace BasketballData.Program
 			Parser.Default.ParseArguments<CommandLineOptions>(args)
 				.WithParsed(o =>
 				{
-					if (o.InitializeFullLoad)
+					if (o.FrequentUpdateTask)
+					{
+						task = new Tasks.FrequentUpdateTask();
+					}
+					else if (o.OddsUpdateTask)
+					{
+						task = new Tasks.OddsUpdateTask();
+					}
+					else if (o.ScheduleRefreshTask)
+					{
+						task = new Tasks.ScheduleRefreshTask();
+					}
+					else if (o.InitializeFullLoadTask)
 					{
 						task = new Tasks.InitializeFullLoadTask();
 					}

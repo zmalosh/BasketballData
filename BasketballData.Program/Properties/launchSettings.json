@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BasketballData.Program": {
+      "commandName": "Project",
+      "commandLineArgs": "-i"
+    }
+  }
+}

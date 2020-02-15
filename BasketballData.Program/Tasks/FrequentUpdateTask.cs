@@ -54,8 +54,8 @@ namespace BasketballData.Program.Tasks
 					{
 						var gamesProcessor = new GamesProcessor(leagueSeasonInfo.ApiBasketballLeagueId, leagueSeasonInfo.ApiBasketballSeasonKey, countriesDict, teamsDict, statusDict);
 						gamesProcessor.Run(context);
+						context.SaveChanges();
 					}
-					context.SaveChanges();
 				}
 			}
 		}

@@ -10,7 +10,7 @@ namespace BasketballData.Program
 	{
 		public abstract void Run();
 
-		internal IConfiguration GetConfig()
+		protected IConfiguration GetConfig()
 		{
 			var builder = new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())

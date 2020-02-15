@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
 
 namespace BasketballData.Model
@@ -8,6 +10,8 @@ namespace BasketballData.Model
 	{
 		public BasketballDataContext() : base()
 		{
+			this.ChangeTracker.Tracked += OnEntityTracked;
+			this.ChangeTracker.StateChanged += OnEntityStateChanged;
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -94,6 +98,23 @@ namespace BasketballData.Model
 			modelBuilder.Entity<BetLine>().Property(x => x.Line).HasColumnType("decimal(7,2)");
 			modelBuilder.Entity<BetLine>().Property(x => x.DateLastModifiedUtc).HasColumnType("datetime").HasDefaultValueSql("getutcdate()");
 			modelBuilder.Entity<BetLine>().Property(x => x.DateCreatedUtc).HasColumnType("datetime").HasDefaultValueSql("getutcdate()");
+		}
+
+		void OnEntityTracked(object sender, EntityTrackedEventArgs e)
+		{
+			if (!e.FromQuery && e.Entry.State == EntityState.Added && e.Entry.Entity is IEntity entity)
+			{
+				entity.DateCreatedUtc = DateTime.UtcNow;
+				entity.DateLastModifiedUtc = DateTime.UtcNow;
+			}
+		}
+
+		void OnEntityStateChanged(object sender, EntityStateChangedEventArgs e)
+		{
+			if (e.NewState == EntityState.Modified && e.Entry.Entity is IEntity entity)
+			{
+				entity.DateLastModifiedUtc = DateTime.UtcNow;
+			}
 		}
 	}
 }

@@ -32,7 +32,7 @@ namespace BasketballData.Model
 		Unknown = 9
 	}
 
-	public class RefGameStatus
+	public class RefGameStatus : IEntity
 	{
 		[DatabaseGenerated(DatabaseGeneratedOption.None)]
 		public FullGameStatus FullGameStatusId { get; set; }

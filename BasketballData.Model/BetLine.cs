@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BasketballData.Model
 {
-	public class BetLine
+	public class BetLine : IEntity
 	{
 		public int BetLineId { get; set; }
 		public int GameId { get; set; }
@@ -15,6 +15,7 @@ namespace BasketballData.Model
 		public decimal? Line { get; set; }
 		public DateTime DateLastModifiedUtc { get; set; }
 		public DateTime DateCreatedUtc { get; set; }
+
 		public virtual Game Game { get; set; }
 		public virtual BetType BetType { get; set; }
 		public virtual Bookmaker Bookmaker { get; set; }

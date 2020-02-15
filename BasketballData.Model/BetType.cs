@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BasketballData.Model
 {
-	public class BetType
+	public class BetType : IEntity
 	{
 		public int BetTypeId { get; set; }
 		public string BetTypeName { get; set; }

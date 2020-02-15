@@ -32,49 +32,52 @@ namespace BasketballData.Processors.ApiBasketball.Processors
 			var rawJson = JsonUtility.GetRawJsonFromUrl(url);
 			var feed = Feeds.GamesFeed.FromJson(rawJson);
 
-			int leagueSeasonId = dbContext.LeagueSeasons.First(x => x.ApiBasketballLeagueId == this.apiBasketballLeagueId && x.ApiBasketballSeasonKey == this.apiBasketballSeasonKey).LeagueSeasonId;
-
-			var existingGames = dbContext.Games.ToDictionary(x => x.ApiBasketballGameId, y => y);
-			var apiGames = feed.Games.OrderBy(x => x.Date).ThenBy(y => y.Id).ToList();
-
-			foreach (var apiGame in apiGames)
+			if (feed != null)
 			{
-				if (apiGame?.Teams?.Home?.Id != null && apiGame.Teams.Away?.Id != null)
+				int leagueSeasonId = dbContext.LeagueSeasons.First(x => x.ApiBasketballLeagueId == this.apiBasketballLeagueId && x.ApiBasketballSeasonKey == this.apiBasketballSeasonKey).LeagueSeasonId;
+
+				var existingGames = dbContext.Games.ToDictionary(x => x.ApiBasketballGameId, y => y);
+				var apiGames = feed.Games.OrderBy(x => x.Date).ThenBy(y => y.Id).ToList();
+
+				foreach (var apiGame in apiGames)
 				{
-					FullGameStatus apiStatus = string.IsNullOrEmpty(apiGame.Status?.Short) ? FullGameStatus.Unknown : statusDict[apiGame.Status.Short];
-					if (!existingGames.TryGetValue(apiGame.Id, out Game dbGame))
+					if (apiGame?.Teams?.Home?.Id != null && apiGame.Teams.Away?.Id != null)
 					{
-						dbGame = new Game
+						FullGameStatus apiStatus = string.IsNullOrEmpty(apiGame.Status?.Short) ? FullGameStatus.Unknown : statusDict[apiGame.Status.Short];
+						if (!existingGames.TryGetValue(apiGame.Id, out Game dbGame))
 						{
-							ApiBasketballGameId = apiGame.Id,
-							AwayTeamId = this.teamsDict[apiGame.Teams.Away.Id.Value],
-							CountryId = this.countriesDict[apiGame.Country.Id],
-							FullGameStatusId = apiStatus,
-							GameTimeUtc = apiGame.Date.UtcDateTime,
-							HomeTeamId = this.teamsDict[apiGame.Teams.Home.Id.Value],
-							LeagueSeasonId = leagueSeasonId,
-							QtrTimeRem = apiGame.Status?.Timer
-						};
+							dbGame = new Game
+							{
+								ApiBasketballGameId = apiGame.Id,
+								AwayTeamId = this.teamsDict[apiGame.Teams.Away.Id.Value],
+								CountryId = this.countriesDict[apiGame.Country.Id],
+								FullGameStatusId = apiStatus,
+								GameTimeUtc = apiGame.Date.UtcDateTime,
+								HomeTeamId = this.teamsDict[apiGame.Teams.Home.Id.Value],
+								LeagueSeasonId = leagueSeasonId,
+								QtrTimeRem = apiGame.Status?.Timer
+							};
 
-						if (apiGame.Scores != null)
-						{
-							SetScoreValuesInDb(apiGame, dbGame);
+							if (apiGame.Scores != null)
+							{
+								SetScoreValuesInDb(apiGame, dbGame);
+							}
+
+							existingGames.Add(apiGame.Id, dbGame);
+							dbContext.Games.Add(dbGame);
 						}
-
-						existingGames.Add(apiGame.Id, dbGame);
-						dbContext.Games.Add(dbGame);
-					}
-					else if (IsApiUpdated(apiGame, dbGame, apiStatus))
-					{
-						dbGame.AwayTeamId = teamsDict[apiGame.Teams.Away.Id.Value];
-						dbGame.FullGameStatusId = apiStatus;
-						dbGame.GameTimeUtc = apiGame.Date.UtcDateTime;
-						dbGame.HomeTeamId = teamsDict[apiGame.Teams.Home.Id.Value];
-						dbGame.QtrTimeRem = apiGame.Status?.Timer;
-
-						if (apiGame.Scores != null)
+						else if (IsApiUpdated(apiGame, dbGame, apiStatus))
 						{
-							SetScoreValuesInDb(apiGame, dbGame);
+							dbGame.AwayTeamId = teamsDict[apiGame.Teams.Away.Id.Value];
+							dbGame.FullGameStatusId = apiStatus;
+							dbGame.GameTimeUtc = apiGame.Date.UtcDateTime;
+							dbGame.HomeTeamId = teamsDict[apiGame.Teams.Home.Id.Value];
+							dbGame.QtrTimeRem = apiGame.Status?.Timer;
+
+							if (apiGame.Scores != null)
+							{
+								SetScoreValuesInDb(apiGame, dbGame);
+							}
 						}
 					}
 				}

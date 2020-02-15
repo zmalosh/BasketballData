@@ -12,7 +12,7 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 			return $"https://api-basketball.p.rapidapi.com/games?league={apiLeagueId}&season={apiSeasonKey}";
 		}
 
-		public static GamesFeed FromJson(string json) => JsonConvert.DeserializeObject<GamesFeed>(json, Converter.Settings);
+		public static GamesFeed FromJson(string json) => string.IsNullOrEmpty(json) ? null : JsonConvert.DeserializeObject<GamesFeed>(json, Converter.Settings);
 
 		[JsonProperty("get")]
 		public string Get { get; set; }

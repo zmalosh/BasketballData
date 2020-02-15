@@ -13,7 +13,6 @@ namespace BasketballData.Model.Initializer
 		{
 			var config = GetConfig();
 
-			Console.WriteLine("Hello World!");
 			using (var context = new BasketballDataContext())
 			{
 				context.Database.EnsureDeleted();
@@ -80,12 +79,6 @@ namespace BasketballData.Model.Initializer
 											.Select(y => new { y.ApiBasketballLeagueId, y.ApiBasketballSeasonKey })
 											.ToList();
 
-				//var desiredLeagueIds = new List<int> { 102, 74 };
-				//leagueSeasons = leagueSeasons
-				//.Where(x => desiredLeagueIds.Contains(x.ApiBasketballLeagueId))
-				//.Where(x => x.SeasonEndUtc >= DateTime.UtcNow.Date)
-				//.ToList();
-
 				foreach (var leagueSeason in leagueSeasons)
 				{
 					int leagueId = leagueSeason.ApiBasketballLeagueId;
@@ -122,12 +115,7 @@ namespace BasketballData.Model.Initializer
 															.Where(x => x.GameStatusId == GameStatus.Pregame || x.GameStatusId == GameStatus.Live)
 															.Select(x => x.FullGameStatusId)
 															.ToList();
-				var activeLeagueSeasons = context.Games
-													.Where(x => liveAndUpcomingGameStatuses.Contains(x.FullGameStatusId)
-																&& x.GameTimeUtc <= DateTime.UtcNow.Date.AddDays(4))
-													.Select(y => new { y.LeagueSeason.ApiBasketballLeagueId, y.LeagueSeason.ApiBasketballSeasonKey })
-													.Distinct()
-													.ToList();
+
 				foreach (var leagueSeason in leagueSeasons)
 				{
 					int leagueId = leagueSeason.ApiBasketballLeagueId;

@@ -37,46 +37,57 @@ namespace BasketballData.Processors.ApiBasketball.Processors
 				var apiOddsGames = feed.OddsGames.ToList();
 				foreach (var apiOddsGame in apiOddsGames)
 				{
-					int gameId = gameDict[apiOddsGame.Game.Id];
-
-					var allGameLines = dbContext.BetLines.Where(x => x.GameId == gameId).ToList();
-					foreach (var apiBookmaker in apiOddsGame.Bookmakers)
+					if (gameDict.TryGetValue(apiOddsGame.Game.Id, out int gameId))
 					{
-						int bookmakerId = this.bookmakersDict[apiBookmaker.BookmakerId];
-						foreach (var apiBetType in apiBookmaker.BetTypes)
+						var allGameLines = dbContext.BetLines.Where(x => x.GameId == gameId).ToList();
+						foreach (var apiBookmaker in apiOddsGame.Bookmakers)
 						{
-							int betTypeId = this.betTypesDict[apiBetType.BetTypeId];
-							foreach (var apiBetLine in apiBetType.BetLines)
+							int bookmakerId = this.bookmakersDict[apiBookmaker.BookmakerId];
+							foreach (var apiBetType in apiBookmaker.BetTypes)
 							{
-								decimal? betValue = null;
-								string betName = apiBetLine.BetName;
-								if (betName.StartsWith("Over ", StringComparison.InvariantCultureIgnoreCase)
-									|| betName.StartsWith("Under ", StringComparison.InvariantCultureIgnoreCase))
+								int betTypeId = this.betTypesDict[apiBetType.BetTypeId];
+								foreach (var apiBetLine in apiBetType.BetLines)
 								{
-									string[] arrBetName = betName.Split(' ');
-									betName = arrBetName[0].ToUpper();
-									if (arrBetName.Length > 1)
+									decimal betLine = apiBetLine.Line_Decimal;
+									decimal? betValue = null;
+									string betName = apiBetLine.BetName.ToUpperInvariant();
+									if (betName.StartsWith("OVER ", StringComparison.InvariantCulture)
+										|| betName.StartsWith("UNDER ", StringComparison.InvariantCulture)
+										|| betName.StartsWith("HOME ", StringComparison.InvariantCulture)
+										|| betName.StartsWith("AWAY ", StringComparison.InvariantCulture)
+										|| betName.StartsWith("DRAW ", StringComparison.InvariantCulture))
 									{
-										string strBetValue = arrBetName[1];
-										if (!string.IsNullOrEmpty(strBetValue))
+										string[] arrBetName = betName.Split(' ');
+										betName = arrBetName[0];
+										if (arrBetName.Length > 1)
 										{
-											betValue = decimal.Parse(strBetValue);
+											string strBetValue = arrBetName[1];
+											if (!string.IsNullOrEmpty(strBetValue))
+											{
+												betValue = decimal.Parse(strBetValue);
+											}
 										}
 									}
-								}
-								var dbBetLine = allGameLines.SingleOrDefault(x => x.GameId == gameId && x.BookmakerId == bookmakerId && x.BetTypeId == betTypeId && x.BetName == betName);
-								if (dbBetLine == null)
-								{
-									dbBetLine = new BetLine
+									var dbBetLine = allGameLines.SingleOrDefault(x => x.GameId == gameId && x.BookmakerId == bookmakerId && x.BetTypeId == betTypeId && x.BetName == betName);
+									if (dbBetLine == null)
 									{
-										GameId = gameId,
-										BookmakerId = bookmakerId,
-										BetTypeId = betTypeId,
-										BetName = betName,
-										Line = apiBetLine.Line_Decimal
-									};
-									allGameLines.Add(dbBetLine);
-									dbContext.BetLines.Add(dbBetLine);
+										dbBetLine = new BetLine
+										{
+											GameId = gameId,
+											BookmakerId = bookmakerId,
+											BetTypeId = betTypeId,
+											BetName = betName,
+											BetValue = betValue,
+											Line = betLine
+										};
+										allGameLines.Add(dbBetLine);
+										dbContext.BetLines.Add(dbBetLine);
+									}
+									else if(dbBetLine.BetValue != betValue || dbBetLine.Line != betLine)
+									{
+										dbBetLine.BetValue = betValue;
+										dbBetLine.Line = betLine;
+									}
 								}
 							}
 						}

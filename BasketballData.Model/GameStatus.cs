@@ -40,5 +40,7 @@ namespace BasketballData.Model
 		public string FullGameStatusName { get; set; }
 		public string GameStatusName { get; set; }
 		public string ApiBasketballStatusCode { get; set; }
+		public DateTime DateLastModifiedUtc { get; set; }
+		public DateTime DateCreatedUtc { get; set; }
 	}
 }

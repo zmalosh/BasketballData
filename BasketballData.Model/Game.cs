@@ -27,6 +27,8 @@ namespace BasketballData.Model
 		public int? AwayScore_Q4 { get; set; }
 		public int? AwayScore_OT { get; set; }
 		public int ApiBasketballGameId { get; set; }
+		public DateTime DateLastModifiedUtc { get; set; }
+		public DateTime DateCreatedUtc { get; set; }
 
 		public virtual LeagueSeason LeagueSeason { get; set; }
 		public virtual Country Country { get; set; }

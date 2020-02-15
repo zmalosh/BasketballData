@@ -13,7 +13,8 @@ namespace BasketballData.Model
 		public string BetName { get; set; }
 		public decimal? BetValue { get; set; }
 		public decimal? Line { get; set; }
-
+		public DateTime DateLastModifiedUtc { get; set; }
+		public DateTime DateCreatedUtc { get; set; }
 		public virtual Game Game { get; set; }
 		public virtual BetType BetType { get; set; }
 		public virtual Bookmaker Bookmaker { get; set; }

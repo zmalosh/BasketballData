@@ -12,6 +12,8 @@ namespace BasketballData.Model
 		public bool IsNationalTeam { get; set; }
 		public int CountryId { get; set; }
 		public int ApiBasketballTeamId { get; set; }
+		public DateTime DateLastModifiedUtc { get; set; }
+		public DateTime DateCreatedUtc { get; set; }
 
 		public virtual Country Country { get; set; }
 		public virtual IList<Game> HomeGames { get; set; }

@@ -13,6 +13,8 @@ namespace BasketballData.Model
 		public string LeagueType { get; set; }
 		public int CountryId { get; set; }
 		public int ApiBasketballLeagueId { get; set; }
+		public DateTime DateLastModifiedUtc { get; set; }
+		public DateTime DateCreatedUtc { get; set; }
 
 		public virtual Country Country { get; set; }
 		public virtual List<LeagueSeason> LeagueSeasons { get; set; }

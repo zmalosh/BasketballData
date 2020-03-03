@@ -96,7 +96,7 @@ namespace BasketballData.Program.Tasks
 				{
 					int leagueId = leagueSeason.ApiBasketballLeagueId;
 					string seasonKey = leagueSeason.ApiBasketballSeasonKey;
-					var gamesProcessor = new GamesProcessor(leagueId, seasonKey, countriesDict, teamsDict, statusDict);
+					var gamesProcessor = new GamesProcessor(leagueId, seasonKey, countriesDict, statusDict);
 					Console.WriteLine($"START GAMES - {leagueId} {seasonKey}");
 					gamesProcessor.Run(context);
 					Console.WriteLine($"SAVE GAMES - {leagueId} {seasonKey}");

@@ -20,7 +20,6 @@ namespace BasketballData.Program.Tasks
 			if (activeLeagueSeasons != null && activeLeagueSeasons.Count > 0)
 			{
 				var countriesDict = context.Countries.ToDictionary(x => x.ApiBasketballCountryId, y => y.CountryId);
-				var teamsDict = context.Teams.ToDictionary(x => x.ApiBasketballTeamId, y => y.TeamId);
 				var statusDict = context.RefGameStatuses
 										.Where(x => !string.IsNullOrEmpty(x.ApiBasketballStatusCode))
 										.ToDictionary(x => x.ApiBasketballStatusCode, y => y.FullGameStatusId);
@@ -28,7 +27,7 @@ namespace BasketballData.Program.Tasks
 				{
 					var leagueSeason = activeLeagueSeasons[i];
 
-					var gamesProcessor = new GamesProcessor(leagueSeason.ApiBasketballLeagueId, leagueSeason.ApiBasketballSeasonKey, countriesDict, teamsDict, statusDict);
+					var gamesProcessor = new GamesProcessor(leagueSeason.ApiBasketballLeagueId, leagueSeason.ApiBasketballSeasonKey, countriesDict, statusDict);
 					gamesProcessor.Run(context);
 					context.SaveChanges();
 

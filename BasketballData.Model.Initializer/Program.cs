@@ -92,7 +92,6 @@ namespace BasketballData.Model.Initializer
 				}
 
 				var countriesDict = context.Countries.ToDictionary(x => x.ApiBasketballCountryId, y => y.CountryId);
-				var teamsDict = context.Teams.ToDictionary(x => x.ApiBasketballTeamId, y => y.TeamId);
 				var statusDict = context.RefGameStatuses
 										.Where(x => !string.IsNullOrEmpty(x.ApiBasketballStatusCode))
 										.ToDictionary(x => x.ApiBasketballStatusCode, y => y.FullGameStatusId);
@@ -100,7 +99,7 @@ namespace BasketballData.Model.Initializer
 				{
 					int leagueId = leagueSeason.ApiBasketballLeagueId;
 					string seasonKey = leagueSeason.ApiBasketballSeasonKey;
-					var gamesProcessor = new GamesProcessor(leagueId, seasonKey, countriesDict, teamsDict, statusDict);
+					var gamesProcessor = new GamesProcessor(leagueId, seasonKey, countriesDict, statusDict);
 					Console.WriteLine($"START GAMES - {leagueId} {seasonKey}");
 					gamesProcessor.Run(context);
 					Console.WriteLine($"SAVE GAMES - {leagueId} {seasonKey}");

@@ -11,18 +11,15 @@ namespace BasketballData.Processors.ApiBasketball.Processors
 		private readonly int apiBasketballLeagueId;
 		private readonly string apiBasketballSeasonKey;
 		private readonly Dictionary<int, int> countriesDict;
-		private readonly Dictionary<int, int> teamsDict;
 		private readonly Dictionary<string, FullGameStatus> statusDict;
 
 		public GamesProcessor(int apiBasketballLeagueId, string apiBasketballSeasonKey,
 			Dictionary<int, int> countriesDict,
-			Dictionary<int, int> teamsDict,
 			Dictionary<string, FullGameStatus> statusDict)
 		{
 			this.apiBasketballLeagueId = apiBasketballLeagueId;
 			this.apiBasketballSeasonKey = apiBasketballSeasonKey;
 			this.countriesDict = countriesDict;
-			this.teamsDict = teamsDict;
 			this.statusDict = statusDict;
 		}
 
@@ -39,6 +36,31 @@ namespace BasketballData.Processors.ApiBasketball.Processors
 				var existingGames = dbContext.Games.ToDictionary(x => x.ApiBasketballGameId, y => y);
 				var apiGames = feed.Games.OrderBy(x => x.Date).ThenBy(y => y.Id).ToList();
 
+				var dbTeamIdsDict = dbContext.Teams.ToDictionary(x => x.ApiBasketballTeamId, y => y.TeamId);
+				var apiTeams = feed.Games.SelectMany(x => new[] { x.Teams.Away, x.Teams.Home })
+											.Where(x => x.Id.HasValue)
+											.Distinct(new Feeds.GamesFeed.ApiTeam.ApiTeamComparer())
+											.ToList();
+				var apiMissingTeams = apiTeams.Where(x => !dbTeamIdsDict.ContainsKey(x.Id.Value)).ToList();
+				bool hasMissingTeams = apiMissingTeams != null && apiMissingTeams.Count > 0;
+				foreach (var apiMissingTeam in apiMissingTeams)
+				{
+					var dbTeam = new Team
+					{
+						ApiBasketballTeamId = apiMissingTeam.Id.Value,
+						CountryId = this.countriesDict[Country.ApiBasketballWorldCountryId],
+						TeamName = apiMissingTeam.Name,
+						TeamLogoUrl = apiMissingTeam.Logo
+					};
+					dbContext.Teams.Add(dbTeam);
+				}
+				if (hasMissingTeams)
+				{
+					dbContext.SaveChanges();
+					dbTeamIdsDict = dbContext.Teams.ToDictionary(x => x.ApiBasketballTeamId, y => y.TeamId);
+				}
+
+
 				foreach (var apiGame in apiGames)
 				{
 					if (apiGame?.Teams?.Home?.Id != null && apiGame.Teams.Away?.Id != null)
@@ -49,11 +71,11 @@ namespace BasketballData.Processors.ApiBasketball.Processors
 							dbGame = new Game
 							{
 								ApiBasketballGameId = apiGame.Id,
-								AwayTeamId = this.teamsDict[apiGame.Teams.Away.Id.Value],
+								AwayTeamId = dbTeamIdsDict[apiGame.Teams.Away.Id.Value],
 								CountryId = this.countriesDict[apiGame.Country.Id],
 								FullGameStatusId = apiStatus,
 								GameTimeUtc = apiGame.Date.UtcDateTime,
-								HomeTeamId = this.teamsDict[apiGame.Teams.Home.Id.Value],
+								HomeTeamId = dbTeamIdsDict[apiGame.Teams.Home.Id.Value],
 								LeagueSeasonId = leagueSeasonId,
 								QtrTimeRem = apiGame.Status?.Timer
 							};
@@ -68,10 +90,10 @@ namespace BasketballData.Processors.ApiBasketball.Processors
 						}
 						else if (IsApiUpdated(apiGame, dbGame, apiStatus))
 						{
-							dbGame.AwayTeamId = teamsDict[apiGame.Teams.Away.Id.Value];
+							dbGame.AwayTeamId = dbTeamIdsDict[apiGame.Teams.Away.Id.Value];
 							dbGame.FullGameStatusId = apiStatus;
 							dbGame.GameTimeUtc = apiGame.Date.UtcDateTime;
-							dbGame.HomeTeamId = teamsDict[apiGame.Teams.Home.Id.Value];
+							dbGame.HomeTeamId = dbTeamIdsDict[apiGame.Teams.Home.Id.Value];
 							dbGame.QtrTimeRem = apiGame.Status?.Timer;
 
 							if (apiGame.Scores != null)

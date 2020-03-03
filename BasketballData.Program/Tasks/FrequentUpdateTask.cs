@@ -45,14 +45,13 @@ namespace BasketballData.Program.Tasks
 				if (targetedApiBasketballLeagueSeasonInfos != null && targetedApiBasketballLeagueSeasonInfos.Count > 0)
 				{
 					var countriesDict = context.Countries.ToDictionary(x => x.ApiBasketballCountryId, y => y.CountryId);
-					var teamsDict = context.Teams.ToDictionary(x => x.ApiBasketballTeamId, y => y.TeamId);
 					var statusDict = context.RefGameStatuses
 											.Where(x => !string.IsNullOrEmpty(x.ApiBasketballStatusCode))
 											.ToDictionary(x => x.ApiBasketballStatusCode, y => y.FullGameStatusId);
 
 					foreach (var leagueSeasonInfo in targetedApiBasketballLeagueSeasonInfos)
 					{
-						var gamesProcessor = new GamesProcessor(leagueSeasonInfo.ApiBasketballLeagueId, leagueSeasonInfo.ApiBasketballSeasonKey, countriesDict, teamsDict, statusDict);
+						var gamesProcessor = new GamesProcessor(leagueSeasonInfo.ApiBasketballLeagueId, leagueSeasonInfo.ApiBasketballSeasonKey, countriesDict, statusDict);
 						gamesProcessor.Run(context);
 						context.SaveChanges();
 					}

@@ -2,7 +2,7 @@
   "profiles": {
     "BasketballData.Program": {
       "commandName": "Project",
-      "commandLineArgs": "-f"
+      "commandLineArgs": "-s"
     }
   }
 }

@@ -6,6 +6,8 @@ namespace BasketballData.Model
 {
 	public class Country : IEntity
 	{
+		public const int ApiBasketballWorldCountryId = 0;
+
 		public int CountryId { get; set; }
 		public string CountryName { get; set; }
 		public string CountryAbbr { get; set; }

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace BasketballData.Processors.ApiBasketball.Feeds
@@ -183,6 +184,20 @@ namespace BasketballData.Processors.ApiBasketball.Feeds
 
 			[JsonProperty("logo")]
 			public string Logo { get; set; }
+
+			public class ApiTeamComparer : IEqualityComparer<ApiTeam>
+			{
+				public bool Equals([AllowNull] ApiTeam x, [AllowNull] ApiTeam y)
+				{
+					if (x == null || y == null || !x.Id.HasValue || !y.Id.HasValue) { return false; }
+					return x.Id.Value == y.Id.Value && ((string.IsNullOrEmpty(x.Name) && string.IsNullOrEmpty(y.Name)) || (x.Name == y.Name));
+				}
+
+				public int GetHashCode([DisallowNull] ApiTeam obj)
+				{
+					return base.GetHashCode();
+				}
+			}
 		}
 	}
 
